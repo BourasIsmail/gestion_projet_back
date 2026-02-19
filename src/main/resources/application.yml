@@ -40,7 +40,7 @@ app:
     refresh-token-expiration: 604800000  # 7 jours
 
   cors:
-    allowed-origins: ${CORS_ORIGINS:http://localhost:3000}
+    allowed-origins: ${CORS_ORIGINS:http://localhost:3000,http://172.16.10.60:3000}
 
   alerts:
     approach-days: 3       # Jours avant deadline pour alerte approche
