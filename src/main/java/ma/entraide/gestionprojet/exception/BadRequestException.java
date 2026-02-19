@@ -1,2 +1,7 @@
-package ma.entraide.gestionprojet.exception;public class BadRequestException {
+package ma.entraide.gestionprojet.exception;
+
+public class BadRequestException extends RuntimeException {
+    public BadRequestException(String message) {
+        super(message);
+    }
 }

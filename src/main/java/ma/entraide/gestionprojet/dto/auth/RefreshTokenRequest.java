@@ -1,2 +1,8 @@
-package ma.entraide.gestionprojet.dto.auth;public class RefreshTokenRequest {
-}
+package ma.entraide.gestionprojet.dto.auth;
+
+import jakarta.validation.constraints.NotBlank;
+
+public record RefreshTokenRequest(
+        @NotBlank String refreshToken
+) {}
+

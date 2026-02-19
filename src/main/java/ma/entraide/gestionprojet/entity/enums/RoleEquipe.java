@@ -1,2 +1,7 @@
-package ma.entraide.gestionprojet.entity.enums;public enum RoleEquipe {
+package ma.entraide.gestionprojet.entity.enums;
+
+public enum RoleEquipe {
+    CHEF_EQUIPE,
+    MEMBRE
 }
+

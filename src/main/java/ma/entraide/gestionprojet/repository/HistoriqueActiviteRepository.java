@@ -1,2 +1,21 @@
-package ma.entraide.gestionprojet.repository;public interface HistoriqueActiviteRepository {
+package ma.entraide.gestionprojet.repository;
+
+import ma.entraide.gestionprojet.entity.HistoriqueActivite;
+import ma.entraide.gestionprojet.entity.enums.EntiteType;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+
+import java.util.List;
+
+@Repository
+public interface HistoriqueActiviteRepository extends JpaRepository<HistoriqueActivite, Long> {
+
+    Page<HistoriqueActivite> findByUserIdOrderByDateCreationDesc(Long userId, Pageable pageable);
+
+    List<HistoriqueActivite> findByEntiteTypeAndEntiteIdOrderByDateCreationDesc(EntiteType type, Long entiteId);
+
+    Page<HistoriqueActivite> findAllByOrderByDateCreationDesc(Pageable pageable);
 }
+

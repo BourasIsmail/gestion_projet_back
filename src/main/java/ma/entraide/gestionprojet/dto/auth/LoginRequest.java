@@ -1,2 +1,9 @@
-package ma.entraide.gestionprojet.dto.auth;public class LoginRequest {
-}
+package ma.entraide.gestionprojet.dto.auth;
+
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+
+public record LoginRequest(
+        @NotBlank @Email String email,
+        @NotBlank String password
+) {}

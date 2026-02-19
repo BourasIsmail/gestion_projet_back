@@ -1,1 +1,57 @@
-spring.application.name=gestionProjet
+server:
+  port: 8080
+
+spring:
+  application:
+    name: gestionProjet
+
+  datasource:
+    url: jdbc:mysql://localhost:3306/gestion_projets?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
+    username: ${DB_USERNAME:root}
+    password: ${DB_PASSWORD:root}
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: false
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQLDialect
+        format_sql: true
+
+  mail:
+    host: ${MAIL_HOST:smtp.gmail.com}
+    port: ${MAIL_PORT:587}
+    username: ${MAIL_USERNAME:}
+    password: ${MAIL_PASSWORD:}
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+
+# JWT Configuration
+app:
+  jwt:
+    secret: ${JWT_SECRET:VotreCleSecreteTresLongueEtComplexeDeAuMoins256Bits!ChangeEnProduction2026}
+    access-token-expiration: 3600000    # 1 heure
+    refresh-token-expiration: 604800000  # 7 jours
+
+  cors:
+    allowed-origins: ${CORS_ORIGINS:http://localhost:3000}
+
+  alerts:
+    approach-days: 3       # Jours avant deadline pour alerte approche
+    urgent-days: 1         # Jours avant deadline pour alerte urgente
+    cron-daily: "0 0 8 * * *"       # Chaque jour a 08h00
+    cron-weekly: "0 0 9 * * MON"    # Chaque lundi a 09h00
+
+  recurrence:
+    cron-generate: "0 0 7 * * *"   # Chaque jour a 07h00 : generation des nouvelles occurrences
+
+logging:
+  level:
+    com.gestionprojets: DEBUG
+    org.springframework.security: INFO
