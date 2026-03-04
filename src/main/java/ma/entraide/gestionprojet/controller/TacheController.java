@@ -5,15 +5,22 @@ import ma.entraide.gestionprojet.dto.TacheDTO;
 import ma.entraide.gestionprojet.dto.request.AddMembreRequest;
 import ma.entraide.gestionprojet.dto.request.CreateTacheRequest;
 import ma.entraide.gestionprojet.dto.request.UpdateTacheRequest;
+import ma.entraide.gestionprojet.entity.PieceJointe;
 import ma.entraide.gestionprojet.security.UserDetailsImpl;
 import ma.entraide.gestionprojet.service.CommentaireService;
+import ma.entraide.gestionprojet.service.PieceJointeService;
 import ma.entraide.gestionprojet.service.TacheRecurrenteService;
 import ma.entraide.gestionprojet.service.TacheService;
+import jakarta.validation.Valid;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
@@ -24,13 +31,16 @@ public class TacheController {
     private final TacheService tacheService;
     private final TacheRecurrenteService tacheRecurrenteService;
     private final CommentaireService commentaireService;
+    private final PieceJointeService pieceJointeService;
 
     public TacheController(TacheService tacheService,
                            TacheRecurrenteService tacheRecurrenteService,
-                           CommentaireService commentaireService) {
+                           CommentaireService commentaireService,
+                           PieceJointeService pieceJointeService) {
         this.tacheService = tacheService;
         this.tacheRecurrenteService = tacheRecurrenteService;
         this.commentaireService = commentaireService;
+        this.pieceJointeService = pieceJointeService;
     }
 
     @GetMapping
@@ -137,5 +147,37 @@ public class TacheController {
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(commentaireService.addCommentaireToTache(id, body.get("contenu"), currentUser.getId()));
     }
+
+    // --- Pieces jointes ---
+
+    @GetMapping("/{id}/pieces-jointes")
+    public ResponseEntity<List<PieceJointeService.PieceJointeDTO>> getPiecesJointes(@PathVariable Long id) {
+        return ResponseEntity.ok(pieceJointeService.getPiecesJointesByTache(id));
+    }
+
+    @PostMapping(value = "/{id}/pieces-jointes", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<PieceJointeService.PieceJointeDTO> uploadPieceJointe(
+            @PathVariable Long id,
+            @RequestParam("file") MultipartFile file,
+            @AuthenticationPrincipal UserDetailsImpl currentUser) throws IOException {
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(pieceJointeService.uploadPieceJointe(id, file, currentUser.getId()));
+    }
+
+    @GetMapping("/pieces-jointes/{pieceJointeId}/download")
+    public ResponseEntity<byte[]> downloadPieceJointe(@PathVariable Long pieceJointeId) {
+        PieceJointe pj = pieceJointeService.getPieceJointe(pieceJointeId);
+        return ResponseEntity.ok()
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + pj.getNomOriginal() + "\"")
+                .contentType(MediaType.parseMediaType(pj.getTypeMime()))
+                .body(pj.getDonnees());
+    }
+
+    @DeleteMapping("/pieces-jointes/{pieceJointeId}")
+    public ResponseEntity<Void> deletePieceJointe(@PathVariable Long pieceJointeId) {
+        pieceJointeService.deletePieceJointe(pieceJointeId);
+        return ResponseEntity.noContent().build();
+    }
 }
+
 
