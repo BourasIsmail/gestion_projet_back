@@ -53,9 +53,15 @@ public class ProjetController {
         return ResponseEntity.ok(projetService.updateProjet(id, request));
     }
 
-    @DeleteMapping("/{id}")
+    @PutMapping("/{id}/archive")
     public ResponseEntity<Void> archiveProjet(@PathVariable Long id) {
         projetService.archiveProjet(id);
+        return ResponseEntity.noContent().build();
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteProjet(@PathVariable Long id) {
+        projetService.deleteProjet(id);
         return ResponseEntity.noContent().build();
     }
 
@@ -75,4 +81,5 @@ public class ProjetController {
         return ResponseEntity.noContent().build();
     }
 }
+
 

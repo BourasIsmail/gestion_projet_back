@@ -128,6 +128,14 @@ public class ProjetService {
         projetRepository.save(projet);
     }
 
+    public void deleteProjet(Long id) {
+        Projet projet = findProjetOrThrow(id);
+        // Delete all related data (members, tasks, etc.) via cascade or manually
+        projetMembreRepository.deleteByProjetId(id);
+        tacheRepository.deleteByProjetId(id);
+        projetRepository.delete(projet);
+    }
+
     public void addMembre(Long projetId, AddMembreRequest request) {
         Projet projet = findProjetOrThrow(projetId);
         User user = userService.findUserOrThrow(request.userId());
@@ -198,4 +206,5 @@ public class ProjetService {
                 .orElseThrow(() -> new ResourceNotFoundException("Projet non trouve avec l'id : " + id));
     }
 }
+
 

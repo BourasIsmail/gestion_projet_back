@@ -15,6 +15,8 @@ public interface TacheRepository extends JpaRepository<Tache, Long> {
 
     List<Tache> findByProjetId(Long projetId);
 
+    void deleteByProjetId(Long projetId);
+
     List<Tache> findByProjetIdAndTacheParentIsNull(Long projetId);
 
     List<Tache> findByStatut(StatutTache statut);
@@ -78,4 +80,3 @@ public interface TacheRepository extends JpaRepository<Tache, Long> {
             "ORDER BY t.occurrenceNumero DESC")
     List<Tache> findOccurrencesByParent(@Param("parentId") Long parentId);
 }
-
